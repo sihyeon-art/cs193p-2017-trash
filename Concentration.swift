@@ -9,14 +9,37 @@ import Foundation
 
 class Concentration
 {
-    var cards = [Card]()
+    private(set) var cards = [Card]()
     
-    var indexOfOneAndOnlyFaceUpCard: Int? // 뒤집혀진 카드의 숫자를 Tracking, 어떤 카드도 뒤집혀 있지 않은 상태(== nil)
-                                            // 를 위해 옵셔널을 타입으로
+    // 뒤집혀진 카드의 숫자를 Tracking, 어떤 카드도 뒤집혀 있지 않은 상태(== nil)를 위해 옵셔널을 타입으로
+   private var indexOfOneAndOnlyFaceUpCard: Int? {
+        get {
+            var foundIndex: Int?
+            for index in cards.indices {
+                if cards[index].isFaceUp {
+                    if foundIndex == nil {
+                        foundIndex = index
+                    } else {
+                        return nil
+                    }
+                }
+            }
+            return foundIndex
+            
+        }
+        set {
+            for index in cards.indices {
+                cards[index].isFaceUp = (index == newValue)
+            }
+            
+        }
+    }
+    
     
     
     
     func chooseCard(at index: Int) {
+        assert(cards.indices.contains(index), "Concentration.chooseCard(at: \(index)): choosen index not in the cards")
         if !cards[index].isMatched {
             //matchIndex에 뒤집혀진 카드의 index 값을 넣고, 뒤집힌 카드가 동일한 카드임을 방지하기 위한 과정
             if let matchIndex = indexOfOneAndOnlyFaceUpCard, matchIndex != index {
@@ -27,15 +50,7 @@ class Concentration
                     
                 }
                 cards[index].isFaceUp = true
-                indexOfOneAndOnlyFaceUpCard = nil
              } else {
-                // either no cards of 2 cards are face up
-                 // 모든 카드를 뒤집는다
-                 for flipDownIndex in cards.indices {
-                     cards[flipDownIndex].isFaceUp = false
-                 }
-                 // 사용자가 선택한 값은 true로,indexOfOneAndOnlyFaceUpCard에 사용자가 선택한 index라는 매개변수로 identifier 값을 할당
-                 cards[index].isFaceUp = true
                  indexOfOneAndOnlyFaceUpCard = index
             }
         }
@@ -44,6 +59,7 @@ class Concentration
     
     
     init(numberOfPairsOfCards: Int) {
+        assert(numberOfPairsOfCards > 0, "Concentration.init(\(numberOfPairsOfCards)): you must have at least one pair of cards")
         for _ in 1...numberOfPairsOfCards {
             let card = Card()
             cards += [card, card]
