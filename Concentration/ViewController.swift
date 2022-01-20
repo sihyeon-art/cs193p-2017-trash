@@ -17,6 +17,7 @@ class ViewController: UIViewController
     
     private(set) var flipCount = 0 {
         didSet {
+            
 //            flipCountLabel.text = "Flips: \(flipCount)"
 //            let attributes: [NSAttributedStringKey:Any] = [
 //                .strokeWidth : 5.0,
@@ -24,6 +25,7 @@ class ViewController: UIViewController
 //            ]
 //            let attributedString = NSAttributedString(string: "Flips: \(flipCount)", attributes: attributes)
 //            flipCountLabel.attributedText = attributedString
+            
             updateFlipCountLabel()
         }
     }
@@ -61,6 +63,10 @@ class ViewController: UIViewController
         
     }
     
+    @IBAction func newGameButton(_ sender: UIButton) {
+        setup()
+    }
+    
     private func updateViewFromModel() {
         for index in cardButtons.indices {
             let button = cardButtons[index]
@@ -71,27 +77,102 @@ class ViewController: UIViewController
                 
             } else {
                 button.setTitle("", for: UIControl.State.normal)
-                button.backgroundColor = card.isMatched ? #colorLiteral(red: 0.6910327673, green: 0.6910327673, blue: 0.6910327673, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+               // button.backgroundColor = card.isMatched ? #colorLiteral(red: 0.6910327673, green: 0.6910327673, blue: 0.6910327673, alpha: 0) : #colorLiteral(red: 1, green: 0.5763723254, blue: 0, alpha: 1)
+                button.backgroundColor = card.isMatched ? #colorLiteral(red: 1, green: 0.5781051517, blue: 0, alpha: 0) : themeColorButton
             }
         }
+        
     }
+    
+    
     
     // private var emojiChoices = ["🎃", "👻", "💀", "🦇", "😱", "🍭", "🍬", "😈", "🍎"]
     
-    private var emojiChoices = "🎃👻💀🦇😱🍭🍬😈"
-
-   private var emoji = [Card:String]()
+   // private var emojiChoices = "🎃👻💀🦇😱🍭🍬😈"
     
-   private func emoji(for card: Card) -> String {
-        if emoji[card] == nil, emojiChoices.count > 0 {
-            let randomStringIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.arc4random)
-            emoji[card] = String(emojiChoices.remove(at: randomStringIndex))
-            
-   }
-        return emoji[card] ?? "?"
-       
-       
-        
+    private var animals: String = "🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮"
+    private var sports: String = "⚽️🏀🏈⚾️🎾🏐🏉🎱🏓🏸🥅🏒"
+    private var faces: String = "😀😃😄😁😆😅😂🤣☺️😊😇🙂"
+    private var cars: String = "🚗🚕🚙🚌🚎🏎🚓🚑🚒🚐🚚🚛"
+    private var flags: String = "🇹🇼🇯🇵🏳️🏴🏁🚩🏳️‍🌈🇱🇷🎌🇨🇦🇳🇵🇬🇪"
+    private var foods: String = "🍏🍎🍐🍊🍋🍌🍉🍇🍓🍈🍒🍑"
+    private var theme: [String] = []
+    private var randomTheme: String = "🐶🐱🐭🐹🐰🦊🐻🐼🐨🐯🦁🐮"
+    private var themeColorButton: UIColor = #colorLiteral(red: 0.9176470588, green: 0.662745098, blue: 0.2666666667, alpha: 1)
+    private var themeColorBackground: UIColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    
+    private func setupTheme() {
+        theme = [animals, sports, faces, cars, flags, foods]
+        randomTheme = getRandomTheme()
+    }
+
+//   private var emoji = [Card:String]()
+    private var emoji = [Card:String]()
+    
+//   private func emoji(for card: Card) -> String {
+//        if emoji[card] == nil, emojiChoices.count > 0 {
+//            let randomStringIndex = emojiChoices.index(emojiChoices.startIndex, offsetBy: emojiChoices.count.arc4random)
+//            emoji[card] = String(emojiChoices.remove(at: randomStringIndex))
+//
+//   }
+//        return emoji[card] ?? "?"
+//    }
+    
+    private func emoji(for card: Card) -> String {
+         if emoji[card] == nil, randomTheme.count > 0 {
+             let randomStringIndex = randomTheme.index(randomTheme.startIndex, offsetBy: randomTheme.count.arc4random)
+             emoji[card] = String(randomTheme.remove(at: randomStringIndex))
+             
+    }
+         return emoji[card] ?? "?"
+     }
+    
+    private func getRandomTheme() -> String {
+        let index = theme.count.arc4random
+        print(theme[index])
+        setColor(at: index)
+        return theme[index]
+    }
+    
+    private func setColor(at theme: Int) {
+        switch theme {
+        case 0:
+            themeColorButton = #colorLiteral(red: 0.4274509804, green: 0.737254902, blue: 0.3882352941, alpha: 1)
+            themeColorBackground = #colorLiteral(red: 0.9764705896, green: 0.850980401, blue: 0.5490196347, alpha: 1)
+        case 1:
+            themeColorButton = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+            themeColorBackground = #colorLiteral(red: 1, green: 0.1857388616, blue: 0.5733950138, alpha: 1)
+        case 2:
+            themeColorButton = #colorLiteral(red: 0.9995340705, green: 0.988355577, blue: 0.4726552367, alpha: 1)
+            themeColorBackground = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        case 3:
+            themeColorButton = #colorLiteral(red: 0.8549019694, green: 0.250980407, blue: 0.4784313738, alpha: 1)
+            themeColorBackground = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        case 4:
+            themeColorButton = #colorLiteral(red: 0.501960814, green: 0.501960814, blue: 0.501960814, alpha: 1)
+            themeColorBackground = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
+        case 5:
+            themeColorButton = #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1)
+            themeColorBackground = #colorLiteral(red: 0.4274509804, green: 0.737254902, blue: 0.3882352941, alpha: 1)
+        default:
+            themeColorButton = #colorLiteral(red: 0.9176470588, green: 0.662745098, blue: 0.2666666667, alpha: 1)
+            themeColorBackground = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        }
+
+    }
+    
+    
+    private func setup() {
+        game = Concentration(numberOfPairsOfCards: numberOfPairsOfCards)
+        setupTheme()
+        updateViewFromModel()
+        view.backgroundColor = themeColorBackground
+        for cards in cardButtons {
+            cards.backgroundColor = themeColorButton
+        }
+        // scoreLabel.textColor = themeColorButton
+        // countLabel.textColor = themeColorButton
+        // newGameButton.setTitleColor(themeColorButton, for: .normal)
     }
     
 }
